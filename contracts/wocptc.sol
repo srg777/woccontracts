@@ -24,6 +24,7 @@ struct AddressBalance {
 contract WOCPTC is ERC20, Ownable, Pausable {
     AddressBalance[] internal _snapshot;
     uint256 internal _snapshotBlock;
+    event Vote(address indexed owner, uint256 question, uint256 answer);
 
     constructor() ERC20("WOC Platinum Coin", "WOCPTC") Ownable() Pausable() {
         _mint(_msgSender(), 21000000 * 10**decimals());
@@ -114,6 +115,10 @@ contract WOCPTC is ERC20, Ownable, Pausable {
             _snapshot[i].updateflag = true;
         }
         return (true);
+    }
+
+    function vote(uint256 _question, uint256 _answer) public {
+        emit Vote(msg.sender, _question, _answer);
     }
 
     function _indexForAddress(address theAddress)
