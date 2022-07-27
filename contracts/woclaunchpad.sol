@@ -71,8 +71,7 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
     /**
      * deposit supposed to be called only once
      * this function will invoke coinTo.transferFrom
-     * deposit will move contract from not ready to ready state and from paused to unpased
-     * not ready state means that nothing sold yet i.e. _ds == 0 and balanceOf the contract is 0
+     * deposit will move contract from paused to unpased
      */
     function deposit() public onlyOwner {
         uint256 balance = IERC20(_coinToAddress).balanceOf(address(this));
@@ -80,8 +79,22 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
             !isSoldout() && _ds == 0 && balance == 0,
             "Contract is already depositet earlier"
         );
-        IERC20(_coinToAddress).transferFrom(msg.sender, address(this), _dmax);
-        IERC20(_coinToAddress).approve(msg.sender, _dmax);
+
+        // SAV#1
+        require(
+            IERC20(_coinToAddress).transferFrom(
+                msg.sender,
+                address(this),
+                _dmax
+            ),
+            "the owner does not have enough PTC to deposit the contract"
+        );
+
+        require(
+            IERC20(_coinToAddress).approve(msg.sender, _dmax),
+            "the contract cannot approve the owner to burn PTC if necessary"
+        );
+
         setPause(false);
     }
 
@@ -133,7 +146,11 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
         _ds += ptcAmount;
         _countSales += 1;
 
-        IERC20(_coinToAddress).transfer(msg.sender, ptcAmount);
+        //SAV#1
+        require(
+            IERC20(_coinToAddress).transfer(msg.sender, ptcAmount),
+            "transfer to the buyer was not completed, the sale occurred with an error"
+        );
 
         if (_ds == _dmax) {
             _soldout = true;
@@ -184,7 +201,11 @@ second: our newBalance in TO coin should decrease for sold amount sharp
     function withdraw() external onlyOwner {
         uint256 balance = IERC20(_coinFromAddress).balanceOf(address(this));
         require(balance > 0, "Nothing to withdraw");
-        IERC20(_coinFromAddress).transfer(msg.sender, balance);
+        //SAV#1
+        require(
+            IERC20(_coinFromAddress).transfer(msg.sender, balance),
+            "withdrawal did not take place"
+        );
         _withdrawed += balance;
     }
 
