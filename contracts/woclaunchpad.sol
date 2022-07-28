@@ -176,8 +176,10 @@ second: our newBalance in TO coin should decrease for sold amount sharp
      * multiply dx by tg(a)
      */
     function _getpx(uint256 dx) private view returns (uint256) {
+        //SAV#5
         require(
-            _ds + dx >= 0 && _ds + dx <= _dmax,
+            // removed            _ds + dx >= 0 &&
+            _ds + dx <= _dmax,
             "getpx couldn't calculate price for d more than dmax"
         );
         return _p0 + (dx * (_pmax - _p0)) / _dmax;
@@ -187,8 +189,10 @@ second: our newBalance in TO coin should decrease for sold amount sharp
      * simple approach, mult average price for this range by length of range
      */
     function _getS(uint256 dx) private view returns (uint256) {
+        //SAV#5
         require(
-            _ds + dx >= 0 && _ds + dx <= _dmax,
+            //removed   _ds + dx >= 0 &&
+            _ds + dx <= _dmax,
             "getS: dx should be in 0 .. dmax-ds range"
         );
         uint256 avgPrice = (_getpx(_ds) + _getpx(_ds + dx)) / 2;
