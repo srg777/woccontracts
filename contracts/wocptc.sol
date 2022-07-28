@@ -32,7 +32,8 @@ contract WOCPTC is ERC20, Ownable, Pausable {
         _mint(_msgSender(), 21000000 * 10**decimals());
     }
 
-    function setPause(bool pause_flag) public onlyOwner {
+    //SAV#9
+    function setPause(bool pause_flag) external onlyOwner {
         if (pause_flag) {
             _pause();
         } else {
@@ -71,17 +72,25 @@ contract WOCPTC is ERC20, Ownable, Pausable {
         }
     }
 
-    function mint(address to, uint256 amount) public virtual onlyOwner {
+    //SAV#9
+    function mint(address to, uint256 amount) external virtual onlyOwner {
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) public virtual whenNotPaused returns (bool) {
+    //SAV#9
+    function burn(uint256 amount)
+        external
+        virtual
+        whenNotPaused
+        returns (bool)
+    {
         _burn(_msgSender(), amount);
         return true;
     }
 
+    //SAV#9
     function burnFrom(address account, uint256 amount)
-        public
+        external
         virtual
         whenNotPaused
         returns (bool)
@@ -96,8 +105,9 @@ contract WOCPTC is ERC20, Ownable, Pausable {
         return true;
     }
 
+    //SAV#9
     function getSnapshot()
-        public
+        external
         view
         onlyOwner
         returns (AddressBalance[] memory)
@@ -105,11 +115,13 @@ contract WOCPTC is ERC20, Ownable, Pausable {
         return (_snapshot);
     }
 
-    function getSnapshotBlock() public view onlyOwner returns (uint256) {
+    //SAV#9
+    function getSnapshotBlock() external view onlyOwner returns (uint256) {
         return (_snapshotBlock);
     }
 
-    function updateSnapshot() public onlyOwner returns (bool) {
+    //SAV#9
+    function updateSnapshot() external onlyOwner returns (bool) {
         _snapshotBlock = block.number;
 
         for (uint256 i = 0; i < _snapshot.length; i++) {
@@ -119,7 +131,8 @@ contract WOCPTC is ERC20, Ownable, Pausable {
         return (true);
     }
 
-    function vote(uint256 _question, uint256 _answer) public {
+    //SAV#9
+    function vote(uint256 _question, uint256 _answer) external {
         emit Vote(msg.sender, _question, _answer);
     }
 

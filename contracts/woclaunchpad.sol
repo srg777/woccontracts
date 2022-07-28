@@ -74,7 +74,9 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
      * this function will invoke coinTo.transferFrom
      * deposit will move contract from paused to unpased
      */
-    function deposit() public onlyOwner {
+
+    //SAV#9
+    function deposit() external onlyOwner {
         uint256 balance = IERC20(_coinToAddress).balanceOf(address(this));
         require(
             !isSoldout() && _ds == 0 && balance == 0,
@@ -103,7 +105,8 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
      * buy some amount of PTC for calculated amound of USDC depending on price change
      */
 
-    function sell(uint256 ptcAmount) public whenNotPaused nonReentrant {
+    //SAV#9
+    function sell(uint256 ptcAmount) external whenNotPaused nonReentrant {
         //buy specific amount of PTC
         require(
             !isSoldout(),
@@ -219,7 +222,8 @@ second: our newBalance in TO coin should decrease for sold amount sharp
      * burn coins belonged to contract
      * and if you burn all the coins - change the state to soldout
      */
-    function burn(uint256 amount) public onlyOwner {
+    //SAV#9
+    function burn(uint256 amount) external onlyOwner {
         require(
             IERC20(_coinToAddress).balanceOf(address(this)) >= amount,
             "Burn immpossible: not enough PTC balance"
@@ -255,39 +259,48 @@ second: our newBalance in TO coin should decrease for sold amount sharp
         return _soldout;
     }
 
-    function withdrawed() public view onlyOwner returns (uint256) {
+    //SAV#9
+    function withdrawed() external view onlyOwner returns (uint256) {
         return _withdrawed;
     }
 
-    function getp0() public view returns (uint256) {
+    //SAV#9
+    function getp0() external view returns (uint256) {
         return (_p0);
     }
 
-    function getpmax() public view returns (uint256) {
+    //SAV#9
+    function getpmax() external view returns (uint256) {
         return (_pmax);
     }
 
-    function getdmax() public view returns (uint256) {
+    //SAV#9
+    function getdmax() external view returns (uint256) {
         return (_dmax);
     }
 
-    function getCoinFromAddress() public view returns (address) {
+    //SAV#9
+    function getCoinFromAddress() external view returns (address) {
         return _coinFromAddress;
     }
 
-    function getCoinToAddress() public view returns (address) {
+    //SAV#9
+    function getCoinToAddress() external view returns (address) {
         return _coinToAddress;
     }
 
-    function getds() public view returns (uint256) {
+    //SAV#9
+    function getds() external view returns (uint256) {
         return _ds;
     }
 
-    function getpx(uint256 dx) public view returns (uint256) {
+    //SAV#9
+    function getpx(uint256 dx) external view returns (uint256) {
         return _getpx(dx);
     }
 
-    function getS(uint256 dx) public view returns (uint256) {
+    //SAV#9
+    function getS(uint256 dx) external view returns (uint256) {
         return _getS(dx);
     }
 }
