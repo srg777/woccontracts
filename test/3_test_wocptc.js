@@ -9,7 +9,7 @@
 const truffleAssert = require("truffle-assertions");
 const WOCPTC = artifacts.require("WOCPTC");
 
-contract.skip("WOCPTC", (accounts) => {
+contract("WOCPTC", (accounts) => {
   describe("ERC20 features", () => {
     it("Should have 'name' and 'symbol' and have '18' for the decimals.", async () => {
       let token = await WOCPTC.deployed();
