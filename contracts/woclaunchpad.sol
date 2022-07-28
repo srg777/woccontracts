@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+//SAV#8
+pragma solidity >=0.8.4 <=0.8.15;
 
 import "./openzeppelin/Ownable.sol";
 import "./openzeppelin/Pausable.sol";
