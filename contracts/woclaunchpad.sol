@@ -89,7 +89,7 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
             ),
             "the owner does not have enough PTC to deposit the contract"
         );
-
+        //SAV#6
         require(
             IERC20(_coinToAddress).approve(msg.sender, _dmax),
             "the contract cannot approve the owner to burn PTC if necessary"
@@ -178,7 +178,7 @@ second: our newBalance in TO coin should decrease for sold amount sharp
     function _getpx(uint256 dx) private view returns (uint256) {
         //SAV#5
         require(
-            // removed            _ds + dx >= 0 &&
+            // removed _ds + dx >= 0 &&
             _ds + dx <= _dmax,
             "getpx couldn't calculate price for d more than dmax"
         );
@@ -191,7 +191,7 @@ second: our newBalance in TO coin should decrease for sold amount sharp
     function _getS(uint256 dx) private view returns (uint256) {
         //SAV#5
         require(
-            //removed   _ds + dx >= 0 &&
+            //removed _ds + dx >= 0 &&
             _ds + dx <= _dmax,
             "getS: dx should be in 0 .. dmax-ds range"
         );
@@ -231,6 +231,7 @@ second: our newBalance in TO coin should decrease for sold amount sharp
         // SAV#4
         _ds += amount;
 
+        //SAV#6
         require(
             Burnable(_coinToAddress).burn(amount),
             "wocpad ptc burn failed"
