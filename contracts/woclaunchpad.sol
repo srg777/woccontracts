@@ -135,6 +135,10 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
             "Sell imposible, because allowance < needed amount"
         );
 
+        // SAV#4
+        _ds += ptcAmount;
+        _countSales += 1;
+
         bool success = IERC20(_coinFromAddress).transferFrom(
             msg.sender,
             address(this),
@@ -142,19 +146,16 @@ contract WOCPAD is Ownable, Pausable, ReentrancyGuard {
         );
 
         require(success, "Sell went wrong, transferFrom finished with error");
-
-        _ds += ptcAmount;
-        _countSales += 1;
-
+        // SAV#4
+        if (_ds == _dmax) {
+            _soldout = true;
+        }
         //SAV#1
         require(
             IERC20(_coinToAddress).transfer(msg.sender, ptcAmount),
             "transfer to the buyer was not completed, the sale occurred with an error"
         );
 
-        if (_ds == _dmax) {
-            _soldout = true;
-        }
         /* 
 checking invariance
 first: our newBalance in FROM coin should increase by payed amount sharp
@@ -223,8 +224,13 @@ second: our newBalance in TO coin should decrease for sold amount sharp
             "Burn immpossible: PTC limit reached (ds+amount>=dmax)"
         );
 
-        Burnable(_coinToAddress).burn(amount);
+        // SAV#4
         _ds += amount;
+
+        require(
+            Burnable(_coinToAddress).burn(amount),
+            "wocpad ptc burn failed"
+        );
 
         if (_ds == _dmax) {
             _soldout = true;
